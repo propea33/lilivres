@@ -8,12 +8,21 @@
 </head>
 <body>
     <header>
+    <div class="header-content">
         <h1>Lilivres</h1>
-        <button class="add-button" onclick="openAddModal()">
-            <span>+</span>
-            Ajouter un Livre
-        </button>
-    </header>
+        <div class="theme-switcher">
+            <button class="theme-button white" onclick="changeTheme('white')" title="Thème initial"></button>
+            <button class="theme-button red" onclick="changeTheme('red')" title="Thème rouge"></button>
+            <button class="theme-button blue" onclick="changeTheme('blue')" title="Thème bleu"></button>
+            <button class="theme-button turquoise" onclick="changeTheme('turquoise')" title="Thème turquoise"></button>
+            <button class="theme-button black" onclick="changeTheme('black')" title="Thème noir"></button>
+        </div>
+    </div>
+    <button class="add-button" onclick="openAddModal()">
+        <span>+</span>
+        Ajouter un Livre
+    </button>
+</header>
 
     <div class="books-grid" id="booksGrid"></div>
 
