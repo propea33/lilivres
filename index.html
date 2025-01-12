@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilivres</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Lilivres</h1>
+        <button class="add-button" onclick="openAddModal()">
+            <span>+</span>
+            Ajouter un Livre
+        </button>
+    </header>
+
+    <div class="books-grid" id="booksGrid"></div>
+
+    <div class="total-pages" id="totalPages">Nombre de pages lues: 0</div>
+
+    <!-- Modal Ajout Livre -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeAddModal()">×</button>
+            <h2>Ajouter un nouveau livre</h2>
+            <form id="addBookForm" onsubmit="handleAddBook(event)">
+                <div class="form-group">
+                    <label>Titre du livre</label>
+                    <input type="text" id="bookTitle" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nombre de pages</label>
+                    <input type="number" id="bookPages" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date de début</label>
+                    <input type="date" id="startDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Date de fin</label>
+                    <input type="date" id="endDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Critique</label>
+                    <div class="rating-group">
+                        <button type="button" class="rating-button" onclick="selectRating('unhappy')" data-rating="unhappy">😠</button>
+                        <button type="button" class="rating-button" onclick="selectRating('neutral')" data-rating="neutral">😐</button>
+                        <button type="button" class="rating-button" onclick="selectRating('happy')" data-rating="happy">😊</button>
+                    </div>
+                    <input type="hidden" id="bookRating" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Photo de couverture</label>
+                    <input type="file" id="coverImage" accept="image/*">
+                </div>
+
+                <button type="submit" class="add-button">Ajouter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Détails Livre -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <button class="close-button" onclick="closeDetailsModal()">×</button>
+            <div id="bookDetails"></div>
+        </div>
+    </div>
+
+    <script src="bookManager.js"></script>
+    <script src="modalManager.js"></script>
+    <script src="uiManager.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
