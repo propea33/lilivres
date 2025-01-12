@@ -136,11 +136,14 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    align-items: center; /* Ajout de cette ligne pour centrer les éléments */
 }
 
 .book-rating {
     text-align: center;
     font-size: 1.25rem;
+    display: flex;
+    justify-content: center; /* Double assurance de centrage */
 }
 
 .book-card:hover {
