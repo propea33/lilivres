@@ -1,6 +1,15 @@
+// uiManager.js
 class UIManager {
     constructor(bookManager) {
         this.bookManager = bookManager;
+        // Initialiser l'affichage au démarrage
+        this.initializeDisplay();
+    }
+
+    // Nouvelle méthode pour initialiser l'affichage
+    initializeDisplay() {
+        this.updateBooksGrid();
+        this.updateTotalPages();
     }
 
     updateBooksGrid() {
@@ -54,6 +63,7 @@ class UIManager {
                     <p><strong>Début:</strong> ${book.startDate}</p>
                     <p><strong>Fin:</strong> ${book.endDate}</p>
                     <p><strong>Critique:</strong> ${getRatingEmoji(book.rating)}</p>
+                    <button class="delete-button" onclick="deleteBook(${book.id})">Supprimer le livre</button>
                 </div>
             </div>
         `;
