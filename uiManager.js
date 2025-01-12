@@ -45,29 +45,44 @@ class UIManager {
         document.getElementById('totalPages').textContent = `Nombre de pages lues: ${total}`;
     }
 
-    showBookDetails(book) {
-        const details = document.getElementById('bookDetails');
-        const getRatingEmoji = rating => {
-            const emojis = { unhappy: '😠', neutral: '😐', happy: '😊' };
-            return emojis[rating] || '';
-        };
+   showBookDetails(book) {
+    const details = document.getElementById('bookDetails');
+    const getRatingEmoji = rating => {
+        const emojis = { unhappy: '😠', neutral: '😐', happy: '😊' };
+        return emojis[rating] || '';
+    };
 
-        details.innerHTML = `
-            <h2>${book.title}</h2>
-            <div class="book-details">
-                <div>
-                    ${book.coverImage ? `<img src="${book.coverImage}" alt="${book.title}" style="width: 100%; border-radius: 0.5rem;">` : ''}
-                </div>
-                <div>
-                    <p><strong>Pages:</strong> ${book.pages}</p>
-                    <p><strong>Début:</strong> ${book.startDate}</p>
-                    <p><strong>Fin:</strong> ${book.endDate}</p>
-                    <p><strong>Critique:</strong> ${getRatingEmoji(book.rating)}</p>
-                    <button class="delete-button" onclick="deleteBook(${book.id})">Supprimer le livre</button>
-                </div>
+    details.innerHTML = `
+        <h2>${book.title}</h2>
+        <div class="book-details">
+            <div>
+                ${book.coverImage ? `<img src="${book.coverImage}" alt="${book.title}" style="width: 100%; border-radius: 0.5rem;">` : ''}
             </div>
-        `;
+            <div>
+                <p><strong>Pages:</strong> ${book.pages}</p>
+                <p><strong>Début:</strong> ${book.startDate}</p>
+                <p><strong>Fin:</strong> ${book.endDate}</p>
+                <p><strong>Critique:</strong> ${getRatingEmoji(book.rating)}</p>
+                <button class="edit-button" onclick="editBook(${book.id})">Modifier le livre</button>
+                <button class="delete-button" onclick="deleteBook(${book.id})">Supprimer le livre</button>
+            </div>
+        </div>
+    `;
 
-        modalManager.openDetailsModal();
-    }
+    modalManager.openDetailsModal();
+}
+
+prepareBookEdit(book) {
+    document.getElementById('bookTitle').value = book.title;
+    document.getElementById('bookPages').value = book.pages;
+    document.getElementById('startDate').value = book.startDate;
+    document.getElementById('endDate').value = book.endDate;
+    modalManager.selectRating(book.rating);
+    
+    const form = document.getElementById('addBookForm');
+    form.setAttribute('data-edit-id', book.id);
+    
+    modalManager.closeDetailsModal();
+    modalManager.openAddModal();
+}
 }
