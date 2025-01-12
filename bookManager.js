@@ -37,4 +37,15 @@ class BookManager {
         this.books = this.books.filter(book => book.id !== id);
         this.saveBooks();
     }
+
+    updateBook(updatedBook) {
+    const index = this.books.findIndex(book => book.id === updatedBook.id);
+    if (index !== -1) {
+        this.books[index] = updatedBook;
+        this.saveBooks();
+        return true;
+    }
+    return false;
+}
+    
 }
