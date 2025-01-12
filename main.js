@@ -1,3 +1,4 @@
+// main.js
 const bookManager = new BookManager();
 const modalManager = new ModalManager();
 const uiManager = new UIManager(bookManager);
@@ -7,6 +8,15 @@ window.openAddModal = () => modalManager.openAddModal();
 window.closeAddModal = () => modalManager.closeAddModal();
 window.closeDetailsModal = () => modalManager.closeDetailsModal();
 window.selectRating = (rating) => modalManager.selectRating(rating);
+
+window.deleteBook = (id) => {
+    if (confirm('Voulez-vous vraiment supprimer ce livre ?')) {
+        bookManager.deleteBook(id);
+        uiManager.updateBooksGrid();
+        uiManager.updateTotalPages();
+        modalManager.closeDetailsModal();
+    }
+};
 
 window.handleAddBook = (event) => {
     event.preventDefault();
