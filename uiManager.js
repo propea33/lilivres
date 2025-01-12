@@ -12,33 +12,43 @@ class UIManager {
         this.updateTotalPages();
     }
 
-    updateBooksGrid() {
-        const grid = document.getElementById('booksGrid');
-        grid.innerHTML = '';
+   updateBooksGrid() {
+    const grid = document.getElementById('booksGrid');
+    grid.innerHTML = '';
 
-        this.bookManager.getAllBooks().forEach(book => {
-            const card = document.createElement('div');
-            card.className = 'book-card';
-            card.onclick = () => this.showBookDetails(book);
+    const getRatingEmoji = rating => {
+        const emojis = { unhappy: '😠', neutral: '😐', happy: '😊' };
+        return emojis[rating] || '';
+    };
 
-            const cover = document.createElement('div');
-            cover.className = 'book-cover';
-            if (book.coverImage) {
-                const img = document.createElement('img');
-                img.src = book.coverImage;
-                img.alt = book.title;
-                cover.appendChild(img);
-            }
+    this.bookManager.getAllBooks().forEach(book => {
+        const card = document.createElement('div');
+        card.className = 'book-card';
+        card.onclick = () => this.showBookDetails(book);
 
-            const title = document.createElement('div');
-            title.className = 'book-title';
-            title.textContent = book.title;
+        const cover = document.createElement('div');
+        cover.className = 'book-cover';
+        if (book.coverImage) {
+            const img = document.createElement('img');
+            img.src = book.coverImage;
+            img.alt = book.title;
+            cover.appendChild(img);
+        }
 
-            card.appendChild(cover);
-            card.appendChild(title);
-            grid.appendChild(card);
-        });
-    }
+        const title = document.createElement('div');
+        title.className = 'book-title';
+        title.textContent = book.title;
+
+        const rating = document.createElement('div');
+        rating.className = 'book-rating';
+        rating.textContent = getRatingEmoji(book.rating);
+
+        card.appendChild(cover);
+        card.appendChild(title);
+        card.appendChild(rating);
+        grid.appendChild(card);
+    });
+}
 
     updateTotalPages() {
         const total = this.bookManager.getTotalPages();
