@@ -95,4 +95,69 @@ prepareBookEdit(book) {
     modalManager.closeDetailsModal();
     modalManager.openAddModal();
 }
+
+     updateFilmsGrid() {
+        const grid = document.getElementById('booksGrid');
+        grid.innerHTML = '';
+
+        const getRatingEmoji = rating => {
+            const emojis = { unhappy: '😠', neutral: '😐', happy: '😊' };
+            return emojis[rating] || '';
+        };
+
+        filmManager.getAllFilms().forEach(film => {
+            const card = document.createElement('div');
+            card.className = 'book-card';
+            card.onclick = () => this.showFilmDetails(film);
+
+            const cover = document.createElement('div');
+            cover.className = 'book-cover';
+            if (film.coverImage) {
+                const img = document.createElement('img');
+                img.src = film.coverImage;
+                img.alt = film.title;
+                cover.appendChild(img);
+            }
+
+            const title = document.createElement('div');
+            title.className = 'book-title';
+            title.textContent = film.title;
+
+            const rating = document.createElement('div');
+            rating.className = 'book-rating';
+            rating.textContent = getRatingEmoji(film.rating);
+
+            card.appendChild(cover);
+            card.appendChild(title);
+            card.appendChild(rating);
+            grid.appendChild(card);
+        });
+    }
+
+    showFilmDetails(film) {
+        const details = document.getElementById('bookDetails');
+        const getRatingEmoji = rating => {
+            const emojis = { unhappy: '😠', neutral: '😐', happy: '😊' };
+            return emojis[rating] || '';
+        };
+
+        details.innerHTML = `
+            <h2>${film.title}</h2>
+            <div class="book-details">
+                <div>
+                    ${film.coverImage ? `<img src="${film.coverImage}" alt="${film.title}" style="width: 100%; border-radius: 0.5rem;">` : ''}
+                </div>
+                <div>
+                    <p><strong>Durée:</strong> ${film.duration} minutes</p>
+                    <p><strong>Date de visionnement:</strong> ${film.viewDate}</p>
+                    <p><strong>Critique:</strong> ${getRatingEmoji(film.rating)}</p>
+                    <button class="edit-button" onclick="editFilm(${film.id})">Modifier le film</button>
+                    <button class="delete-button" onclick="deleteFilm(${film.id})">Supprimer le film</button>
+                </div>
+            </div>
+        `;
+
+        modalManager.openDetailsModal();
+    }
+}
 }
