@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+  <header>
     <div class="header-content">
-        <h1>Lilivres</h1>
+        <button id="switchButton" class="switch-button" onclick="switchSection()">Lilivres</button>
         <div class="theme-switcher">
             <button class="theme-button white" onclick="changeTheme('white')" title="Thème initial"></button>
             <button class="theme-button red" onclick="changeTheme('red')" title="Thème rouge"></button>
@@ -22,9 +22,9 @@
             <button class="theme-button black" onclick="changeTheme('black')" title="Thème noir"></button>
         </div>
     </div>
-    <button class="add-button" onclick="openAddModal()">
+    <button class="add-button" id="addButton" onclick="openAddModal()">
         <span>+</span>
-        Ajouter un Livre
+        <span id="addButtonText">Ajouter un Livre</span>
     </button>
 </header>
 
@@ -77,6 +77,47 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Ajout Film -->
+<div class="modal" id="addFilmModal">
+    <div class="modal-content">
+        <button class="close-button" onclick="closeAddModal()">×</button>
+        <h2>Ajouter un nouveau film</h2>
+        <form id="addFilmForm" onsubmit="handleAddFilm(event)">
+            <div class="form-group">
+                <label>Titre du film</label>
+                <input type="text" id="filmTitle" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Durée (en minutes)</label>
+                <input type="number" id="filmDuration" required>
+            </div>
+
+            <div class="form-group">
+                <label>Date de visionnement</label>
+                <input type="date" id="viewDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Critique</label>
+                <div class="rating-group">
+                    <button type="button" class="rating-button" onclick="selectRating('unhappy')" data-rating="unhappy">😠</button>
+                    <button type="button" class="rating-button" onclick="selectRating('neutral')" data-rating="neutral">😐</button>
+                    <button type="button" class="rating-button" onclick="selectRating('happy')" data-rating="happy">😊</button>
+                </div>
+                <input type="hidden" id="filmRating" required>
+            </div>
+
+            <div class="form-group">
+                <label>Photo de couverture</label>
+                <input type="file" id="filmCoverImage" accept="image/*">
+            </div>
+
+            <button type="submit" class="add-button">Ajouter</button>
+        </form>
+    </div>
+</div>
 
     <!-- Modal Détails Livre -->
     <div class="modal" id="detailsModal">
