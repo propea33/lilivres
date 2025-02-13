@@ -3,9 +3,31 @@ const bookManager = new BookManager();
 const modalManager = new ModalManager();
 const uiManager = new UIManager(bookManager);
 const themeManager = new ThemeManager();
-
 const filmManager = new FilmManager();
 let currentSection = 'books'; // 'books' ou 'films'
+
+// Event Listeners
+window.openAddModal = () => {
+    if (currentSection === 'books') {
+        document.getElementById('addModal').classList.add('active');
+    } else {
+        document.getElementById('addFilmModal').classList.add('active');
+    }
+};
+
+window.closeAddModal = () => {
+    if (currentSection === 'books') {
+        document.getElementById('addModal').classList.remove('active');
+    } else {
+        document.getElementById('addFilmModal').classList.remove('active');
+    }
+    document.getElementById('addBookForm').reset();
+    document.getElementById('addFilmForm').reset();
+    modalManager.resetRatingButtons();
+};
+
+window.closeDetailsModal = () => modalManager.closeDetailsModal();
+window.selectRating = (rating) => modalManager.selectRating(rating);
 
 window.switchSection = () => {
     const switchButton = document.getElementById('switchButton');
@@ -24,6 +46,59 @@ window.switchSection = () => {
         addButtonText.textContent = 'Ajouter un Livre';
         totalPages.textContent = `Nombre de pages lues: ${bookManager.getTotalPages()}`;
         uiManager.updateBooksGrid();
+    }
+};
+
+// Gestion des livres
+window.deleteBook = (id) => {
+    if (confirm('Voulez-vous vraiment supprimer ce livre ?')) {
+        bookManager.deleteBook(id);
+        uiManager.updateBooksGrid();
+        uiManager.updateTotalPages();
+        modalManager.closeDetailsModal();
+    }
+};
+
+window.editBook = (id) => {
+    const book = bookManager.getBookById(id);
+    if (book) {
+        uiManager.prepareBookEdit(book);
+    }
+};
+
+// Gestion des films
+window.deleteFilm = (id) => {
+    if (confirm('Voulez-vous vraiment supprimer ce film ?')) {
+        filmManager.deleteFilm(id);
+        uiManager.updateFilmsGrid();
+        modalManager.closeDetailsModal();
+    }
+};
+
+window.editFilm = (id) => {
+    const film = filmManager.getFilmById(id);
+    if (film) {
+        uiManager.prepareFilmEdit(film);
+    }
+};
+
+window.handleAddBook = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const editId = form.getAttribute('data-edit-id');
+
+    const fileInput = document.getElementById('coverImage');
+    const file = fileInput.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            processBookData(e.target.result, editId);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        const existingBook = editId ? bookManager.getBookById(parseInt(editId)) : null;
+        processBookData(existingBook ? existingBook.coverImage : null, editId);
     }
 };
 
@@ -47,100 +122,6 @@ window.handleAddFilm = (event) => {
     }
 };
 
-function processFilmData(coverImage, editId) {
-    const filmData = {
-        title: document.getElementById('filmTitle').value,
-        duration: parseInt(document.getElementById('filmDuration').value),
-        viewDate: document.getElementById('viewDate').value,
-        rating: modalManager.getSelectedRating(),
-        coverImage: coverImage
-    };
-
-    if (editId) {
-        filmData.id = parseInt(editId);
-        filmManager.updateFilm(filmData);
-        document.getElementById('addFilmForm').removeAttribute('data-edit-id');
-    } else {
-        filmData.id = Date.now();
-        filmManager.addFilm(filmData);
-    }
-
-    uiManager.updateFilmsGrid();
-    modalManager.closeAddModal();
-}
-
-// Event Listeners
-window.openAddModal = () => modalManager.openAddModal();
-window.closeAddModal = () => modalManager.closeAddModal();
-window.closeDetailsModal = () => modalManager.closeDetailsModal();
-window.selectRating = (rating) => modalManager.selectRating(rating);
-
-window.deleteBook = (id) => {
-    if (confirm('Voulez-vous vraiment supprimer ce livre ?')) {
-        bookManager.deleteBook(id);
-        uiManager.updateBooksGrid();
-        uiManager.updateTotalPages();
-        modalManager.closeDetailsModal();
-    }
-};
-
-// Fonction de changement de thème
-window.changeTheme = (theme) => {
-    themeManager.applyTheme(theme);
-};
-
-// Fonction d'édition
-window.editBook = (id) => {
-    const book = bookManager.getBookById(id);
-    if (book) {
-        uiManager.prepareBookEdit(book);
-    }
-};
-
-// Modifier la fonction handleAddBook
-window.handleAddBook = (event) => {
-    event.preventDefault();
-    const form = event.target;
-    const editId = form.getAttribute('data-edit-id');
-
-    const fileInput = document.getElementById('coverImage');
-    const file = fileInput.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            processBookData(e.target.result, editId);
-        };
-        reader.readAsDataURL(file);
-    } else {
-        const existingBook = editId ? bookManager.getBookById(parseInt(editId)) : null;
-        processBookData(existingBook ? existingBook.coverImage : null, editId);
-    }
-};
-
-function addBookWithCover(coverImage) {
-    const newBook = {
-        id: Date.now(),
-        title: document.getElementById('bookTitle').value,
-        pages: parseInt(document.getElementById('bookPages').value),
-        startDate: document.getElementById('startDate').value,
-        endDate: document.getElementById('endDate').value,
-        rating: modalManager.getSelectedRating(),
-        coverImage: coverImage
-    };
-
-    bookManager.addBook(newBook);
-    uiManager.updateBooksGrid();
-    uiManager.updateTotalPages();
-    modalManager.closeAddModal();
-}
-
-// Fermer les modales si on clique en dehors
-window.onclick = function(event) {
-    if (event.target.classList.contains('modal')) {
-        event.target.classList.remove('active');
-    }
-}
 function processBookData(coverImage, editId) {
     const bookData = {
         title: document.getElementById('bookTitle').value,
@@ -163,4 +144,37 @@ function processBookData(coverImage, editId) {
     uiManager.updateBooksGrid();
     uiManager.updateTotalPages();
     modalManager.closeAddModal();
+}
+
+function processFilmData(coverImage, editId) {
+    const filmData = {
+        title: document.getElementById('filmTitle').value,
+        duration: parseInt(document.getElementById('filmDuration').value),
+        viewDate: document.getElementById('viewDate').value,
+        rating: modalManager.getSelectedRating(),
+        coverImage: coverImage
+    };
+
+    if (editId) {
+        filmData.id = parseInt(editId);
+        filmManager.updateFilm(filmData);
+        document.getElementById('addFilmForm').removeAttribute('data-edit-id');
+    } else {
+        filmData.id = Date.now();
+        filmManager.addFilm(filmData);
+    }
+
+    uiManager.updateFilmsGrid();
+    modalManager.closeAddModal();
+}
+
+window.changeTheme = (theme) => {
+    themeManager.applyTheme(theme);
+};
+
+// Fermer les modales si on clique en dehors
+window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('active');
+    }
 }
