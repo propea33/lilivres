@@ -289,3 +289,19 @@ h1 {
 .delete-button:hover {
     background-color: #b91c1c;
 }
+
+.switch-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s;
+}
+
+.switch-button:hover {
+    background-color: var(--card-bg);
+}
